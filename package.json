@@ -10,10 +10,7 @@
     "lint:fix": "eslint --fix src/**/*.ts"
   },
   "lint-staged": {
-    "*.ts": [
-      "npm run lint:fix",
-      "git add"
-    ]
+    "*.ts": ["npm run lint:fix"]
   },
   "husky": {
     "hooks": {
