@@ -13,16 +13,23 @@ export type UserInfo = WebAPICallResult & {
   };
 };
 
+type Reaction = {
+  name: string;
+  count: number;
+  users: string[];
+};
+
+type Message = {
+  type: string;
+  user: string;
+  text: string;
+  ts: string;
+  bot_id?: string | undefined;
+  reactions?: Reaction[];
+};
+
 type ConversationsHistory = WebAPICallResult & {
-  messages: [
-    {
-      type: string;
-      user: string;
-      text: string;
-      ts: number;
-      bot_id?: string;
-    }
-  ];
+  messages: Message[];
   has_more: boolean;
 };
 
@@ -68,8 +75,7 @@ export default class LunchLauncher {
     });
   }
 
-  // TODO: 戻り型を作る
-  async getLatestMessageByBot(): Promise<any> {
+  async getLatestMessageByBot(): Promise<Message> {
     let hasMore = false;
     let cursor;
 
@@ -80,7 +86,9 @@ export default class LunchLauncher {
       })) as ConversationsHistory;
       if (!result.ok) throw new Error('異常なレスポンスを検知しました。');
 
-      const sorteMessages = result.messages.sort((a, b) => b.ts - a.ts);
+      const sorteMessages = result.messages.sort(
+        (a, b) => Number(b.ts) - Number(a.ts)
+      );
       for (const message of sorteMessages) {
         if (
           message.bot_id === 'BTMS0LDHT' &&

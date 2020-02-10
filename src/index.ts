@@ -18,13 +18,12 @@ const sendReminder = async (): Promise<void> => {
   try {
     const lunchLauncher = new LunchLauncher();
     const latestMessageByBot = await lunchLauncher.getLatestMessageByBot();
-    const reactedUserIds = latestMessageByBot.reactions.reduce(
-      (acc: any, cur: any, i: number) => {
-        if (i === 0) return cur.users;
-        return acc.users.concat(cur.users);
-      }
-    );
-    const reactedUserIdsUniq: string[] = uniq(reactedUserIds);
+    const reactedUserIds = latestMessageByBot.reactions
+      ?.map(reaction => {
+        return reaction.users;
+      })
+      .flat();
+    const reactedUserIdsUniq = uniq(reactedUserIds);
 
     const membersInChannel = (await lunchLauncher.listMembers()).members;
     const unreactedUserIds = xor(reactedUserIdsUniq, membersInChannel);
