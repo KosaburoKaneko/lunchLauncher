@@ -10,7 +10,9 @@
     "lint:fix": "eslint --fix src/**/*.ts"
   },
   "lint-staged": {
-    "*.ts": ["npm run lint:fix"]
+    "*.ts": [
+      "npm run lint:fix"
+    ]
   },
   "husky": {
     "hooks": {
@@ -20,6 +22,9 @@
   "author": "Kosaburo Kaneko",
   "license": "ISC",
   "devDependencies": {
+    "@slack/web-api": "^5.7.0",
+    "@types/lodash.uniq": "^4.5.6",
+    "@types/lodash.xor": "^4.5.6",
     "@typescript-eslint/eslint-plugin": "^2.19.0",
     "@typescript-eslint/parser": "^2.19.0",
     "eslint": "^6.8.0",
@@ -32,6 +37,8 @@
     "typescript": "^3.7.5"
   },
   "dependencies": {
-    "axios": "^0.19.2"
+    "axios": "^0.19.2",
+    "lodash.uniq": "^4.5.0",
+    "lodash.xor": "^4.5.0"
   }
 }
