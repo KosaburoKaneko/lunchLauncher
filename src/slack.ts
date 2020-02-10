@@ -55,7 +55,9 @@ export default class LunchLauncher {
       channel: this.channelId,
       text: `${envOf(
         'LUNCH_TIME'
-      )}からランチに出発します！\n参加する方は:o:を、参加しない方は:x:を押してください。`
+      )}からランチに出発します！\n参加する方は${envOf(
+        'ACCEPT_EMOJI'
+      )}を、参加しない方は${envOf('DECLINE_EMOJI')}を押してください。`
     });
     if (!result.ok) throw new Error('異常なレスポンスを検知しました。');
 
@@ -65,14 +67,18 @@ export default class LunchLauncher {
   async addInitialReaction(ts: string): Promise<void> {
     await this.web.reactions.add({
       channel: this.channelId,
-      name: 'o',
+      name: this.convertEmojiCodeToName(envOf('ACCEPT_EMOJI')),
       timestamp: ts
     });
     await this.web.reactions.add({
       channel: this.channelId,
-      name: 'x',
+      name: this.convertEmojiCodeToName(envOf('DECLINE_EMOJI')),
       timestamp: ts
     });
+  }
+
+  convertEmojiCodeToName(emojiCode: string): string {
+    return emojiCode.replace(/:/g, '');
   }
 
   async getLatestMessageByBot(): Promise<Message> {
