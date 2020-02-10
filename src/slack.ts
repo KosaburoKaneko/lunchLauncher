@@ -43,12 +43,6 @@ export default class LunchLauncher {
     });
   }
 
-  async getUserInfo(userId: string): Promise<WebAPICallResult> {
-    return await this.web.users.info({
-      user: userId
-    });
-  }
-
   async sendInvitation(): Promise<void> {
     const result = await this.web.chat.postMessage({
       channel: this.channelId,
