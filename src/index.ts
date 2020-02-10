@@ -1,14 +1,15 @@
 import LunchLauncher from './slack';
 import uniq from 'lodash.uniq';
 import xor from 'lodash.xor';
+import logger from './logger';
 
 const sendInvitation = async (): Promise<void> => {
   try {
     const lunchLauncher = new LunchLauncher();
-    const result = await lunchLauncher.sendInvitation();
-    console.log('ランチの招待メッセージが送信されました :', result);
+    await lunchLauncher.sendInvitation();
+    logger.info('ランチの招待メッセージが送信されました');
   } catch (err) {
-    console.log('err: ', err);
+    logger.error(err);
   }
 };
 
@@ -26,14 +27,14 @@ const sendReminder = async (): Promise<void> => {
 
     const membersInChannel = (await lunchLauncher.listMembers()).members;
     const unreactedUserIds = xor(reactedUserIdsUniq, membersInChannel);
-    console.log('unreactedUserIds :', unreactedUserIds);
     await lunchLauncher.sendRemider(unreactedUserIds);
-    // console.log('ランチのリマインダーメッセージが送信されました :', result);
+    logger.info('ランチのリマインダーメッセージが送信されました');
   } catch (err) {
-    console.log('err: ', err);
+    logger.error(err);
   }
 };
 
 (async (): Promise<void> => {
-  await sendReminder();
+  await sendInvitation();
+  // await sendReminder();
 })();

@@ -23,6 +23,7 @@
   "license": "ISC",
   "devDependencies": {
     "@slack/web-api": "^5.7.0",
+    "@types/bunyan": "^1.8.6",
     "@types/lodash.uniq": "^4.5.6",
     "@types/lodash.xor": "^4.5.6",
     "@typescript-eslint/eslint-plugin": "^2.19.0",
@@ -38,6 +39,7 @@
   },
   "dependencies": {
     "axios": "^0.19.2",
+    "bunyan": "^1.8.12",
     "lodash.uniq": "^4.5.0",
     "lodash.xor": "^4.5.0"
   }
