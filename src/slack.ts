@@ -25,6 +25,11 @@ type ConversationsHistory = WebAPICallResult & {
   has_more: boolean;
 };
 
+type PermaLink = WebAPICallResult & {
+  channel: string;
+  permalink: string;
+};
+
 export default class LunchLauncher {
   // TODO: 環境変数にする
   readonly token = 'xoxb-928390395747-927075841618-sSIH54xbhAYHoF3tusMZx1mB';
@@ -99,12 +104,26 @@ export default class LunchLauncher {
     throw new Error('Botからのメッセージがチャネル内に存在しません。');
   }
 
-  async sendRemider(usersToMention: string[]): Promise<void> {
+  async sendRemider(
+    usersToMention: string[],
+    messageTs: string
+  ): Promise<void> {
+    const permaLink = await this.getPermaLink(messageTs);
+
     const mention = usersToMention.map((id: string) => `<@${id}>`);
     // TODO: マシなメッセージ内容にする
     await this.web.chat.postMessage({
       channel: this.channelId,
-      text: `${mention}\n何か反応してください！`
+      text: `${mention}\n今日の13時からのランチに参加しますか？こちらのメッセージに絵文字でご回答ください！\n${permaLink}`
     });
+  }
+
+  async getPermaLink(messageTs: string): Promise<string> {
+    const result = (await this.web.chat.getPermalink({
+      channel: this.channelId,
+      message_ts: messageTs
+    })) as PermaLink;
+    if (!result.ok) throw new Error('異常なレスポンスを検知しました。');
+    return result.permalink;
   }
 }

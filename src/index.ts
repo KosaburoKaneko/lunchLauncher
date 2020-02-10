@@ -27,7 +27,7 @@ const sendReminder = async (): Promise<void> => {
 
     const membersInChannel = (await lunchLauncher.listMembers()).members;
     const unreactedUserIds = xor(reactedUserIdsUniq, membersInChannel);
-    await lunchLauncher.sendRemider(unreactedUserIds);
+    await lunchLauncher.sendRemider(unreactedUserIds, latestMessageByBot.ts);
     logger.info('ランチのリマインダーメッセージが送信されました');
   } catch (err) {
     logger.error(err);
@@ -35,6 +35,6 @@ const sendReminder = async (): Promise<void> => {
 };
 
 (async (): Promise<void> => {
-  await sendInvitation();
-  // await sendReminder();
+  // await sendInvitation();
+  await sendReminder();
 })();
