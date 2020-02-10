@@ -2,6 +2,7 @@ import LunchLauncher from './slack';
 import uniq from 'lodash.uniq';
 import xor from 'lodash.xor';
 import logger from './logger';
+import './env';
 
 const sendInvitation = async (): Promise<void> => {
   try {
@@ -35,6 +36,6 @@ const sendReminder = async (): Promise<void> => {
 };
 
 (async (): Promise<void> => {
-  // await sendInvitation();
-  await sendReminder();
+  await sendInvitation();
+  // await sendReminder();
 })();

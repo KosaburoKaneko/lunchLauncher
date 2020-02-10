@@ -1,4 +1,5 @@
 import { WebClient, WebAPICallResult } from '@slack/web-api';
+import { envOf } from './utils';
 
 export type ConversationMembers = WebAPICallResult & {
   members?: string[];
@@ -31,11 +32,9 @@ type PermaLink = WebAPICallResult & {
 };
 
 export default class LunchLauncher {
-  // TODO: 環境変数にする
-  readonly token = 'xoxb-928390395747-927075841618-sSIH54xbhAYHoF3tusMZx1mB';
-  readonly slackEndpoint =
-    'https://hooks.slack.com/services/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';
-  readonly channelId = 'CT9276718';
+  readonly token = envOf('SLACK_BOT_TOKEN');
+  readonly slackEndpoint = envOf('SLACK_ENDPOINT');
+  readonly channelId = envOf('SLACK_CHANNEL_ID');
   private web = new WebClient(this.token);
 
   async listMembers(): Promise<ConversationMembers> {
@@ -53,8 +52,9 @@ export default class LunchLauncher {
   async sendInvitation(): Promise<void> {
     const result = await this.web.chat.postMessage({
       channel: this.channelId,
-      text:
-        '13時からランチに出発します！\n参加する方は:o:を、参加しない方は:x:を押してください。'
+      text: `${envOf(
+        'LUNCH_TIME'
+      )}からランチに出発します！\n参加する方は:o:を、参加しない方は:x:を押してください。`
     });
     if (!result.ok) throw new Error('異常なレスポンスを検知しました。');
 
@@ -88,10 +88,11 @@ export default class LunchLauncher {
 
       const sorteMessages = result.messages.sort((a, b) => b.ts - a.ts);
       for (const message of sorteMessages) {
-        // TODO: 環境変数にする
         if (
           message.bot_id === 'BTMS0LDHT' &&
-          message.text.includes('13時からランチに出発します！')
+          message.text.includes(
+            `${envOf('LUNCH_TIME')}からランチに出発します！`
+          )
         ) {
           return message;
         }
@@ -114,7 +115,9 @@ export default class LunchLauncher {
     // TODO: マシなメッセージ内容にする
     await this.web.chat.postMessage({
       channel: this.channelId,
-      text: `${mention}\n今日の13時からのランチに参加しますか？こちらのメッセージに絵文字でご回答ください！\n${permaLink}`
+      text: `${mention}\n今日の${envOf(
+        'LUNCH_TIME'
+      )}からのランチに参加しますか？こちらのメッセージに絵文字でご回答ください！\n${permaLink}`
     });
   }
 
